@@ -1,0 +1,43 @@
+{
+  "name": "Fire & Smoke Detector - Save Life",
+  "short_name": "Fire Alert",
+  "description": "Real-time fire and smoke detection with GPS location alerts and email notifications",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#ff4500",
+  "background_color": "#1a1a2e",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg viewBox='0 0 192 192' xmlns='http://www.w3.org/2000/svg'><rect fill='%231a1a2e' width='192' height='192'/><defs><linearGradient id='fireGrad' x1='0%' y1='100%' x2='0%' y2='0%'><stop offset='0%' style='stop-color:%23ff4500'/><stop offset='50%' style='stop-color:%23ff6b35'/><stop offset='100%' style='stop-color:%23f7931e'/></linearGradient></defs><path d='M96 180 Q40 160 45 100 Q54 40 96 10 Q138 40 150 100 Q160 160 96 180' fill='url(%23fireGrad)'/><path d='M96 170 Q65 150 70 110 Q80 70 96 50 Q112 70 122 110 Q130 150 96 170' fill='%23ffd700'/><ellipse cx='84' cy='80' rx='10' ry='20' fill='rgba(255,255,255,0.4)'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg viewBox='0 0 192 192' xmlns='http://www.w3.org/2000/svg'><rect fill='%23ff4500' width='192' height='192' rx='45'/><defs><linearGradient id='fireGrad' x1='0%' y1='100%' x2='0%' y2='0%'><stop offset='0%' style='stop-color:%23ffeb3b'/><stop offset='50%' style='stop-color:%23ff9800'/><stop offset='100%' style='stop-color:%23f44336'/></linearGradient></defs><path d='M96 160 Q50 140 55 90 Q62 50 96 30 Q130 50 138 90 Q145 140 96 160' fill='url(%23fireGrad)'/><path d='M96 150 Q70 135 74 100 Q82 70 96 55 Q110 70 118 100 Q125 135 96 150' fill='%23ffd700'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'><rect fill='%231a1a2e' width='512' height='512'/><defs><linearGradient id='fireGrad' x1='0%' y1='100%' x2='0%' y2='0%'><stop offset='0%' style='stop-color:%23ff4500'/><stop offset='50%' style='stop-color:%23ff6b35'/><stop offset='100%' style='stop-color:%23f7931e'/></linearGradient></defs><path d='M256 480 Q120 430 130 280 Q145 100 256 20 Q367 100 385 280 Q395 430 256 480' fill='url(%23fireGrad)' opacity='0.9'/><path d='M256 450 Q170 410 180 290 Q200 150 256 80 Q312 150 330 290 Q340 410 256 450' fill='%23ffd700'/><ellipse cx='224' cy='200' rx='25' ry='50' fill='rgba(255,255,255,0.3)'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg viewBox='0 0 540 720' xmlns='http://www.w3.org/2000/svg'><rect fill='%231a1a2e' width='540' height='720'/><text x='270' y='360' font-size='40' fill='white' text-anchor='middle' dominant-baseline='middle'>🔥 Fire Alert App</text></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ]
+}

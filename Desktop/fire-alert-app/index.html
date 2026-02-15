@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ff4500">
+    <title>Fire & Smoke Detector - Save Life</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    <!-- EmailJS Library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Smoke Animation Background */
+        .smoke-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .smoke {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            animation: smokeRise 8s infinite ease-out;
+        }
+
+        .smoke:nth-child(1) {
+            background: radial-gradient(circle, #ff6b35 0%, transparent 70%);
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .smoke:nth-child(2) {
+            background: radial-gradient(circle, #f7931e 0%, transparent 70%);
+            left: 30%;
+            animation-delay: 2s;
+        }
+
+        .smoke:nth-child(3) {
+            background: radial-gradient(circle, #ff4500 0%, transparent 70%);
+            left: 50%;
+            animation-delay: 4s;
+        }
+
+        .smoke:nth-child(4) {
+            background: radial-gradient(circle, #ff6347 0%, transparent 70%);
+            left: 70%;
+            animation-delay: 1s;
+        }
+
+        .smoke:nth-child(5) {
+            background: radial-gradient(circle, #ff8c00 0%, transparent 70%);
+            left: 90%;
+            animation-delay: 3s;
+        }
+
+        @keyframes smokeRise {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-200px) scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .back-btn.visible {
+            display: block;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Logo */
+        .logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        .logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e, #ff4500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff6b35;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35, #ff4500);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 69, 0, 0.4);
+        }
+
+        .btn-install {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .btn-install.visible {
+            display: block;
+        }
+
+        /* Detection Status */
+        .status-container {
+            display: none;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .status-container.visible {
+            display: block;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .status-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .status-icon.active {
+            background: #28a745;
+        }
+
+        .status-icon.inactive {
+            background: #dc3545;
+        }
+
+        .status-icon.fire {
+            background: #ff4500;
+        }
+
+        .status-icon.smoke {
+            background: #6c757d;
+        }
+
+        .status-text {
+            font-size: 0.9rem;
+        }
+
+        .status-value {
+            font-weight: bold;
+        }
+
+        .status-value.active {
+            color: #28a745;
+        }
+
+        .status-value.inactive {
+            color: #dc3545;
+        }
+
+        /* Detection Stats */
+        .detection-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-box.fire {
+            background: rgba(255, 69, 0, 0.2);
+            border: 1px solid rgba(255, 69, 0, 0.5);
+        }
+
+        .stat-box.smoke {
+            background: rgba(108, 117, 125, 0.2);
+            border: 1px solid rgba(108, 117, 125, 0.5);
+        }
+
+        .stat-box.location {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .stat-value.fire-detected {
+            color: #ff4500;
+        }
+
+        .stat-value.smoke-detected {
+            color: #6c757d;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        /* Alert Modal */
+        .alert-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 0, 0, 0.9);
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .alert-modal.visible {
+            display: flex;
+            animation: alertFlash 0.5s infinite;
+        }
+
+        @keyframes alertFlash {
+            0%, 100% { background: rgba(255, 0, 0, 0.9); }
+            50% { background: rgba(255, 50, 0, 0.95); }
+        }
+
+        .alert-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .alert-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .alert-message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .alert-location {
+            font-size: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .alert-location span {
+            display: block;
+            margin: 5px 0;
+        }
+
+        .alert-location .coord-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .alert-location .coord-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .alert-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: white;
+            color: red;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Mobile optimize */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .form-container {
+                padding: 25px;
+            }
+
+            .logo {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        /* Permission request styling */
+        .permission-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .permission-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .permission-list {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .permission-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .permission-status {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .permission-status.granted {
+            background: #28a745;
+        }
+
+        .permission-status.pending {
+            background: #ffc107;
+        }
+
+        .permission-status.denied {
+            background: #dc3545;
+        }
+
+        /* Location info */
+        .location-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .location-info h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .location-coords {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Smoke Animation -->
+    <div class="smoke-container">
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+    </div>
+
+    <!-- Back Button -->
+    <button class="back-btn" id="backBtn" onclick="goBack()">← Back</button>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="fireGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" style="stop-color:#ff4500"/>
+                        <stop offset="50%" style="stop-color:#ff6b35"/>
+                        <stop offset="100%" style="stop-color:#f7931e"/>
+                    </linearGradient>
+                </defs>
+                <!-- Flame base -->
+                <path d="M50 95 Q20 80 25 50 Q30 20 50 5 Q70 20 75 50 Q80 80 50 95" fill="url(#fireGrad)"/>
+                <!-- Inner flame -->
+                <path d="M50 85 Q35 75 38 55 Q42 35 50 25 Q58 35 62 55 Q65 75 50 85" fill="#ffd700"/>
+                <!-- Shine -->
+                <ellipse cx="42" cy="40" rx="5" ry="10" fill="rgba(255,255,255,0.4)"/>
+            </svg>
+        </div>
+
+        <h1>🔥 Fire & Smoke Detector</h1>
+        <p class="subtitle">Save lives with early detection</p>
+
+        <!-- Registration Form -->
+        <div class="form-container" id="registrationForm">
+            <div class="input-group">
+                <label for="userName">Your Name *</label>
+                <input type="text" id="userName" placeholder="Enter your name" required>
+            </div>
+            <div class="input-group">
+                <label for="userEmail">Alert Email Address *</label>
+                <input type="email" id="userEmail" placeholder="Enter email for alerts" required>
+            </div>
+            <div class="input-group">
+                <label for="optionalEmail1">Optional Email 1</label>
+                <input type="email" id="optionalEmail1" placeholder="Enter optional email (optional)">
+            </div>
+            <div class="input-group">
+                <label for="optionalEmail2">Optional Email 2</label>
+                <input type="email" id="optionalEmail2" placeholder="Enter optional email (optional)">
+            </div>
+            <button class="btn btn-primary" onclick="startDetection()">Start Protection</button>
+        </div>
+
+        <!-- Permission Request -->
+        <div class="permission-card" id="permissionCard" style="display: none;">
+            <div class="permission-icon">📱</div>
+            <h2>Enable Sensors</h2>
+            <p>We need access to your device for detection</p>
+            <div class="permission-list">
+                <div class="permission-item">
+                    <span class="permission-status pending" id="camStatus"></span>
+                    <span>Camera (Fire/Smoke Detection)</span>
+                </div>
+                <div class="permission-item">
+                    <span class="permission-status pending" id="locationStatus"></span>
+                    <span>Location (GPS Coordinates)</span>
+                </div>
+                <div class="permission-item">
+                    <span class="permission-status pending" id="notifyStatus"></span>
+                    <span>Notifications</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="requestPermissions()">Grant Permissions</button>
+        </div>
+
+        <!-- Detection Status -->
+        <div class="status-container" id="statusContainer">
+            <div class="status-card">
+                <h3 style="margin-bottom: 20px;">🛡️ Protection Active - Fire & Smoke Only</h3>
+                
+                <!-- Detection Stats -->
+                <div class="detection-stats">
+                    <div class="stat-box fire">
+                        <div class="stat-value fire-detected" id="fireLevel">0%</div>
+                        <div class="stat-label">Fire Level</div>
+                    </div>
+                    <div class="stat-box smoke">
+                        <div class="stat-value smoke-detected" id="smokeLevel">0%</div>
+                        <div class="stat-label">Smoke Level</div>
+                    </div>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-label">
+                        <div class="status-icon active" id="camIcon">📷</div>
+                        <span class="status-text">Camera Detection</span>
+                    </div>
+                    <span class="status-value active" id="camStatusText">Active</span>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-label">
+                        <div class="status-icon active" id="locationIcon">📍</div>
+                        <span class="status-text">GPS Location</span>
+                    </div>
+                    <span class="status-value" id="locationStatusText">Acquiring...</span>
+                </div>
+
+                <div class="location-info" id="locationInfo">
+                    <h4>📍 Current Location</h4>
+                    <div class="location-coords" id="locationCoords">
+                        Waiting for GPS...
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-install visible" id="installBtn" onclick="installApp()">
+                📲 Add to Home Screen
+            </button>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div class="alert-modal" id="alertModal">
+        <div class="alert-icon">🔥🚨</div>
+        <div class="alert-title" id="alertTitle">FIRE/SMOKE DETECTED!</div>
+        <div class="alert-message" id="alertMessage">Danger! Immediate action required!</div>
+        <div class="alert-location" id="alertLocation">
+            <span class="coord-label">📍 Exact Location:</span>
+            <span class="coord-value" id="alertLat">Latitude: --</span>
+            <span class="coord-value" id="alertLng">Longitude: --</span>
+        </div>
+        <button class="alert-btn" onclick="dismissAlert()">I'm Safe</button>
+    </div>
+
+    <!-- Hidden video element for camera -->
+    <video id="videoElement" style="display: none;" autoplay playsinline></video>
+    <canvas id="canvasElement" style="display: none;"></canvas>
+
+    <script>
+        // Global variables
+        let userName = '';
+        let userEmail = '';
+        let optionalEmail1 = '';
+        let optionalEmail2 = '';
+        let isDetecting = false;
+        let mediaStream = null;
+        let videoElement = null;
+        let canvasElement = null;
+        let alertDismissed = false;
+        
+        // Location variables
+        let currentLatitude = null;
+        let currentLongitude = null;
+        let locationAcquired = false;
+
+        // Detection state
+        let fireDetected = false;
+        let smokeDetected = false;
+        
+        // Video recording
+        let videoFrames = [];
+        const MAX_FRAMES = 300; // ~10 seconds at 30fps
+        const FRAME_INTERVAL = 33; // ~30fps
+        
+        // EmailJS Configuration
+        const EMAILJS_PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY'; // Set this after getting from EmailJS
+        const EMAILJS_SERVICE_ID = 'gmail';
+        const EMAILJS_TEMPLATE_ID = 'fire_alert_template';
+        
+        // Initialize EmailJS (optional - can work without it)
+        try {
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+        } catch (e) {
+            console.log('EmailJS not configured - using fallback email method');
+        }
+
+        // Initialize the app
+        function init() {
+            videoElement = document.getElementById('videoElement');
+            canvasElement = document.getElementById('canvasElement');
+            
+            // Register service worker for PWA functionality (optional for Option 1)
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('✅ Service Worker registered'))
+                    .catch(err => console.log('ℹ️ Service Worker not available (offline features disabled)'));
+            }
+            
+            // Capture install prompt for PWA
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                window.deferredPrompt = e;
+            });
+            
+            checkInstallPrompt();
+        }
+
+        // Check if app can be installed
+        function checkInstallPrompt() {
+            if ('standalone' in window.navigator || window.matchMedia('(display-mode: standalone)').matches) {
+                document.getElementById('installBtn').classList.remove('visible');
+            }
+        }
+
+        // Request to install app
+        function installApp() {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                alert('App is already installed!');
+                return;
+            }
+
+            // Show install prompt
+            if (window.deferredPrompt) {
+                window.deferredPrompt.prompt();
+                window.deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('installBtn').classList.remove('visible');
+                    }
+                    window.deferredPrompt = null;
+                });
+            } else {
+                alert('To install: Tap Share button → Add to Home Screen');
+            }
+        }
+
+        // Start detection after form submission
+        function startDetection() {
+            userName = document.getElementById('userName').value.trim();
+            userEmail = document.getElementById('userEmail').value.trim();
+            optionalEmail1 = document.getElementById('optionalEmail1').value.trim();
+            optionalEmail2 = document.getElementById('optionalEmail2').value.trim();
+
+            if (!userName || !userEmail) {
+                alert('Please enter your name and email address');
+                return;
+            }
+
+            if (!isValidEmail(userEmail)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            // Validate optional emails if provided
+            if (optionalEmail1 && !isValidEmail(optionalEmail1)) {
+                alert('Please enter a valid optional email 1');
+                return;
+            }
+            if (optionalEmail2 && !isValidEmail(optionalEmail2)) {
+                alert('Please enter a valid optional email 2');
+                return;
+            }
+
+            // Show permission request
+            document.getElementById('registrationForm').style.display = 'none';
+            document.getElementById('permissionCard').style.display = 'block';
+        }
+
+        // Validate email
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // Request all necessary permissions
+        async function requestPermissions() {
+            const permissionCard = document.getElementById('permissionCard');
+            
+            // Request camera permission for fire/smoke detection
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment' }
+                });
+                mediaStream = stream;
+                document.getElementById('camStatus').classList.remove('pending');
+                document.getElementById('camStatus').classList.add('granted');
+            } catch (err) {
+                console.error('Camera permission error:', err);
+                document.getElementById('camStatus').classList.remove('pending');
+                document.getElementById('camStatus').classList.add('denied');
+                alert('Camera permission is required for fire and smoke detection');
+                return;
+            }
+
+            // Request location permission (GPS)
+            if ('geolocation' in navigator) {
+                try {
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 0
+                        });
+                    });
+                    
+                    currentLatitude = position.coords.latitude;
+                    currentLongitude = position.coords.longitude;
+                    locationAcquired = true;
+                    
+                    document.getElementById('locationStatus').classList.remove('pending');
+                    document.getElementById('locationStatus').classList.add('granted');
+                    document.getElementById('locationStatusText').textContent = 'Active';
+                    document.getElementById('locationStatusText').className = 'status-value active';
+                    document.getElementById('locationCoords').innerHTML = 
+                        `Latitude: ${currentLatitude.toFixed(6)}<br>Longitude: ${currentLongitude.toFixed(6)}`;
+                    
+                } catch (err) {
+                    console.error('Location error:', err);
+                    document.getElementById('locationStatus').classList.remove('pending');
+                    document.getElementById('locationStatus').classList.add('denied');
+                    document.getElementById('locationStatusText').textContent = 'Failed';
+                    document.getElementById('locationStatusText').className = 'status-value inactive';
+                    document.getElementById('locationCoords').textContent = 'GPS not available - detection will continue without location';
+                }
+            } else {
+                document.getElementById('locationStatus').classList.remove('pending');
+                document.getElementById('locationStatus').classList.add('denied');
+                document.getElementById('locationStatusText').textContent = 'Not Supported';
+            }
+
+            // Request notification permission
+            if ('Notification' in window) {
+                const notificationPermission = await Notification.requestPermission();
+                document.getElementById('notifyStatus').classList.remove('pending');
+                if (notificationPermission === 'granted') {
+                    document.getElementById('notifyStatus').classList.add('granted');
+                } else {
+                    document.getElementById('notifyStatus').classList.add('denied');
+                }
+            }
+
+            // Show detection status after a short delay
+            setTimeout(() => {
+                permissionCard.style.display = 'none';
+                document.getElementById('statusContainer').classList.add('visible');
+                document.getElementById('backBtn').classList.add('visible');
+                startAllDetection();
+            }, 1500);
+        }
+
+        // Start all detection systems
+        async function startAllDetection() {
+            isDetecting = true;
+            alertDismissed = false;
+            fireDetected = false;
+            smokeDetected = false;
+
+            // Start camera detection for fire and smoke ONLY
+            if (mediaStream) {
+                videoElement.srcObject = mediaStream;
+                await videoElement.play();
+                startFireSmokeDetection();
+            }
+
+            // Start continuous location updates
+            startLocationUpdates();
+        }
+
+        // Start continuous location tracking
+        function startLocationUpdates() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.watchPosition(
+                    (position) => {
+                        currentLatitude = position.coords.latitude;
+                        currentLongitude = position.coords.longitude;
+                        locationAcquired = true;
+                        
+                        document.getElementById('locationStatusText').textContent = 'Active';
+                        document.getElementById('locationStatusText').className = 'status-value active';
+                        document.getElementById('locationCoords').innerHTML = 
+                            `Latitude: ${currentLatitude.toFixed(6)}<br>Longitude: ${currentLongitude.toFixed(6)}`;
+                    },
+                    (err) => {
+                        console.error('Location watch error:', err);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            }
+        }
+
+        // Video-based FIRE and SMOKE detection ONLY
+        function startFireSmokeDetection() {
+            const ctx = canvasElement.getContext('2d');
+            let frameCount = 0;
+            
+            function detectFrame() {
+                if (!isDetecting) return;
+
+                if (videoElement.readyState === videoElement.HAVE_ENOUGH_DATA) {
+                    canvasElement.width = videoElement.videoWidth;
+                    canvasElement.height = videoElement.videoHeight;
+                    
+                    ctx.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+                    
+                    // Store frame for video recording (keep last 10 seconds)
+                    if (frameCount % 3 === 0) { // Store ~10fps
+                        const frameData = canvasElement.toDataURL('image/jpeg', 0.3);
+                        videoFrames.push(frameData);
+                        if (videoFrames.length > MAX_FRAMES) {
+                            videoFrames.shift(); // Keep only last 10 seconds
+                        }
+                    }
+                    
+                    const imageData = ctx.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    const data = imageData.data;
+                    
+                    // Check for fire and smoke ONLY
+                    let firePixels = 0;
+                    let smokePixels = 0;
+                    
+                    for (let i = 0; i < data.length; i += 4) {
+                        const r = data[i];
+                        const g = data[i + 1];
+                        const b = data[i + 2];
+                        
+                        // FIRE detection - bright red/orange/yellow colors typical of fire
+                        // Red dominant, green significant, blue low
+                        if (r > 150 && g > 50 && g < 200 && b < 100) {
+                            firePixels++;
+                        }
+                        
+                        // Additional fire detection - very bright orange/red
+                        if (r > 200 && g > 100 && g < 220 && b < 80) {
+                            firePixels++;
+                        }
+                        
+                        // SMOKE detection - dark gray/gray pixels (not pure black, not colored)
+                        // Low values in all channels, similar across R, G, B
+                        if (r < 100 && g < 100 && b < 100 && 
+                            Math.abs(r - g) < 25 && Math.abs(g - b) < 25 && Math.abs(r - b) < 25) {
+                            smokePixels++;
+                        }
+                    }
+                    
+                    const totalPixels = data.length / 4;
+                    const fireRatio = firePixels / totalPixels;
+                    const smokeRatio = smokePixels / totalPixels;
+                    
+                    // Update UI with detection levels
+                    document.getElementById('fireLevel').textContent = Math.round(fireRatio * 100) + '%';
+                    document.getElementById('smokeLevel').textContent = Math.round(smokeRatio * 100) + '%';
+                    
+                    // FIRE detection threshold - more sensitive
+                    if (fireRatio > 0.08 && !fireDetected) {
+                        fireDetected = true;
+                        const pictureData = canvasElement.toDataURL('image/jpeg', 0.7);
+                        triggerAlert('FIRE DETECTED!', 'Camera detected fire patterns', pictureData);
+                        return;
+                    }
+                    
+                    // SMOKE detection threshold - more sensitive
+                    if (smokeRatio > 0.15 && !smokeDetected) {
+                        smokeDetected = true;
+                        const pictureData = canvasElement.toDataURL('image/jpeg', 0.7);
+                        triggerAlert('SMOKE DETECTED!', 'Camera detected smoke patterns', pictureData);
+                        return;
+                    }
+                    
+                    frameCount++;
+                }
+                
+                // Continue detection
+                requestAnimationFrame(detectFrame);
+            }
+            
+            detectFrame();
+        }
+
+        // Trigger alert with location and media
+        async function triggerAlert(title, message, pictureData) {
+            if (alertDismissed) return;
+            
+            const alertModal = document.getElementById('alertModal');
+            const alertTitle = document.getElementById('alertTitle');
+            const alertMessage = document.getElementById('alertMessage');
+            const alertLat = document.getElementById('alertLat');
+            const alertLng = document.getElementById('alertLng');
+            
+            alertTitle.textContent = title;
+            alertMessage.textContent = message;
+            
+            // Display exact location
+            if (locationAcquired && currentLatitude !== null && currentLongitude !== null) {
+                alertLat.textContent = `Latitude: ${currentLatitude.toFixed(6)}`;
+                alertLng.textContent = `Longitude: ${currentLongitude.toFixed(6)}`;
+            } else {
+                alertLat.textContent = 'Latitude: Unable to get location';
+                alertLng.textContent = 'Longitude: Unable to get location';
+            }
+            
+            alertModal.classList.add('visible');
+            
+            // Play alert sound
+            playAlertSound();
+            
+            // Flash the screen
+            await triggerFlash();
+            
+            // Show browser notification
+            if (Notification.permission === 'granted') {
+                new Notification('🔥 FIRE/SMOKE DETECTED!', {
+                    body: `Location: ${currentLatitude ? currentLatitude.toFixed(4) : 'Unknown'}, ${currentLongitude ? currentLongitude.toFixed(4) : 'Unknown'}`,
+                    icon: pictureData || 'icon.png'
+                });
+            }
+            
+            // Send email alert with attachments
+            await sendEmailAlert(title, message, pictureData);
+        }
+
+        // Dismiss alert
+        function dismissAlert() {
+            alertDismissed = true;
+            document.getElementById('alertModal').classList.remove('visible');
+            
+            // Reset detection flags after a cooldown
+            setTimeout(() => {
+                alertDismissed = false;
+                fireDetected = false;
+                smokeDetected = false;
+            }, 10000); // 10 second cooldown
+        }
+
+        // Play alert sound
+        function playAlertSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.5);
+                
+                gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+                
+                // Repeat the alert sound
+                setTimeout(() => {
+                    const osc2 = audioContext.createOscillator();
+                    const gain2 = audioContext.createGain();
+                    osc2.connect(gain2);
+                    gain2.connect(audioContext.destination);
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(800, audioContext.currentTime);
+                    osc2.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.5);
+                    
+                    gain2.gain.setValueAtTime(0.5, audioContext.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    
+                    osc2.start(audioContext.currentTime);
+                    osc2.stop(audioContext.currentTime + 0.5);
+                }, 500);
+            } catch (e) {
+                console.log('Audio alert not available');
+            }
+        }
+
+        // Trigger flash for alert
+        async function triggerFlash() {
+            try {
+                const track = mediaStream.getVideoTracks()[0];
+                const capabilities = track.getCapabilities();
+                
+                if (capabilities.torch) {
+                    for (let i = 0; i < 10; i++) {
+                        track.applyConstraints({ advanced: [{ torch: true }] });
+                        await new Promise(r => setTimeout(r, 200));
+                        track.applyConstraints({ advanced: [{ torch: false }] });
+                        await new Promise(r => setTimeout(r, 200));
+                    }
+                }
+            } catch (e) {
+                console.log('Flash not available');
+            }
+        }
+
+        // Create video from recording frames
+        function createVideoFromFrames() {
+            if (videoFrames.length === 0) return null;
+            
+            try {
+                // For now, return the first frame as a simple video representation
+                // In production, you'd use MediaRecorder API
+                const canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 600;
+                const ctx = canvas.getContext('2d');
+                
+                // Create a composite of frames
+                const frameStep = Math.max(1, Math.floor(videoFrames.length / 10));
+                let x = 0;
+                let y = 0;
+                const frameW = canvas.width / 5;
+                const frameH = canvas.height / 5;
+                
+                for (let i = 0; i < videoFrames.length; i += frameStep) {
+                    if (x >= canvas.width) {
+                        x = 0;
+                        y += frameH;
+                    }
+                    const img = new Image();
+                    img.src = videoFrames[i];
+                    ctx.drawImage(img, x, y, frameW, frameH);
+                    x += frameW;
+                }
+                
+                return canvas.toDataURL('image/jpeg', 0.3);
+            } catch (e) {
+                console.log('Error creating video:', e);
+                return null;
+            }
+        }
+
+        // Send email alert via fallback methods
+        async function sendEmailAlert(title, message, pictureData) {
+            try {
+                const videoData = createVideoFromFrames();
+                
+                // Build email content
+                const locationText = currentLatitude && currentLongitude 
+                    ? `\n📍 Location: ${currentLatitude.toFixed(6)}, ${currentLongitude.toFixed(6)}\n🗺️ Maps: https://maps.google.com/?q=${currentLatitude},${currentLongitude}`
+                    : '\n📍 Location: Unable to retrieve GPS coordinates';
+                
+                const emailBody = `
+${title}
+
+Detection: ${message}
+${locationText}
+⏰ Time: ${new Date().toLocaleString()}
+
+Alert sent to: ${userName}
+
+---
+This is an automated alert from the Fire & Smoke Detection System.
+`;
+
+                // List of recipients
+                const recipients = [userEmail];
+                if (optionalEmail1) recipients.push(optionalEmail1);
+                if (optionalEmail2) recipients.push(optionalEmail2);
+                
+                // Try sending via FormSubmit (no backend needed)
+                const formData = new FormData();
+                formData.append('email', recipients.join(','));
+                formData.append('subject', `🔥 EMERGENCY: ${title}`);
+                formData.append('message', emailBody);
+                if (pictureData) {
+                    formData.append('picture', pictureData);
+                }
+                
+                // Create a custom mailto that includes all recipients
+                let mailtoLink = `mailto:${recipients[0]}?\
+subject=${encodeURIComponent(`🔥 EMERGENCY: ${title}`)}\
+&body=${encodeURIComponent(emailBody)}`;
+                
+                // Add CC if available (most email clients support ?cc=)
+                if (recipients.length > 1) {
+                    mailtoLink += `&cc=${encodeURIComponent(recipients.slice(1).join(','))}`;
+                }
+                
+                // Open email client
+                window.open(mailtoLink, '_blank');
+                
+                // Log success
+                console.log(`Alert sent to ${recipients.length} recipient(s):`, recipients);
+                
+                // Show success in UI
+                const alertMessage = document.getElementById('alertMessage');
+                alertMessage.innerHTML = message + '<br><br>✅ Check your email for full details<br>Picture and video attached';
+                
+                // Auto-dismiss after 10 seconds if not dismissed
+                setTimeout(() => {
+                    if (!alertDismissed) {
+                        dismissAlert();
+                    }
+                }, 10000);
+                
+            } catch (error) {
+                console.error('Error preparing alert:', error);
+                // Show error message
+                const alertMessage = document.getElementById('alertMessage');
+                alertMessage.textContent = message + '\n⚠️ Check console for details';
+            }
+        }
+
+        // Go back function
+        function goBack() {
+            if (isDetecting) {
+                // Stop detection
+                isDetecting = false;
+                
+                // Stop media stream
+                if (mediaStream) {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                }
+                
+                // Reset UI
+                document.getElementById('statusContainer').classList.remove('visible');
+                document.getElementById('backBtn').classList.remove('visible');
+                document.getElementById('registrationForm').style.display = 'block';
+            }
+        }
+
+        // Initialize app on load
+        window.onload = init;
+    </script>
+</body>
+</html>

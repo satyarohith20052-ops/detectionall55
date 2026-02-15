@@ -1,0 +1,577 @@
+<!--
+  Fire & Smoke Detection System - Configuration Guide
+  This file explains how to set up the different features
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire & Smoke Alert - Configuration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #ff6b35;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ff6b35;
+        }
+        
+        .option {
+            background: #f8f9fa;
+            border-left: 4px solid #ff6b35;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        
+        .option h3 {
+            color: #ff4500;
+            margin-bottom: 10px;
+        }
+        
+        .option p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .file-list {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        
+        .file-list ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        
+        .file-list li {
+            padding: 8px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .file-list li:before {
+            content: "📄 ";
+            margin-right: 10px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35, #ff4500);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 69, 0, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .alert strong {
+            color: #856404;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin: 20px 0;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .tab-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            color: #ff6b35;
+            border-bottom-color: #ff6b35;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 Fire & Smoke Detection System</h1>
+            <p>Get Started in Minutes - Two Flexible Setup Options</p>
+        </div>
+        
+        <div class="content">
+            <!-- Quick Start -->
+            <div class="section">
+                <h2>⚡ Quick Start</h2>
+                <div class="button-group">
+                    <a href="index.html" class="btn btn-primary">🚀 Open Main App</a>
+                    <a href="SETUP.md" class="btn btn-secondary">📖 Read Full Setup Guide</a>
+                    <a href="README.md" class="btn btn-secondary">📚 View Documentation</a>
+                </div>
+            </div>
+            
+            <!-- Features -->
+            <div class="section">
+                <h2>✨ Key Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>📷 Real-time Detection</h3>
+                        <p>Camera-based fire and smoke detection</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📍 GPS Tracking</h3>
+                        <p>Exact latitude & longitude coordinates</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📧 Email Alerts</h3>
+                        <p>Send to primary + 2 optional emails</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📸 Photo Evidence</h3>
+                        <p>Attachment of detection screenshot</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🎥 Video Clip</h3>
+                        <p>10-second video recording attached</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📱 PWA Support</h3>
+                        <p>Installable on home screen</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Setup Options -->
+            <div class="section">
+                <h2>🛠️ Choose Your Setup</h2>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab(event, 'option1')">Option 1: Instant (No Backend)</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'option2')">Option 2: Full-Featured (Node.js)</button>
+                </div>
+                
+                <!-- Option 1 -->
+                <div id="option1" class="tab-content active">
+                    <div class="option">
+                        <h3>🚀 Instant Setup - No Backend Required</h3>
+                        <p><strong>Best for:</strong> Quick testing, privacy-focused, no server setup</p>
+                        
+                        <h4 style="margin-top: 15px; color: #333;">How it Works:</h4>
+                        <ol style="margin-left: 20px; line-height: 1.8;">
+                            <li>Open <code style="background: #f0f0f0; padding: 2px 6px;">index.html</code> in your browser</li>
+                            <li>Grant camera, location, and notification permissions</li>
+                            <li>Enter your name and email addresses (primary + 2 optional)</li>
+                            <li>System monitors for fire/smoke patterns</li>
+                            <li>On detection: Alert appears and opens your email client</li>
+                            <li>You manually send the email from your email account</li>
+                        </ol>
+                        
+                        <h4 style="margin-top: 15px; color: #333;">Testing Locally:</h4>
+                        <div class="code-block">
+# Option A: With Python
+python -m http.server 8000
+
+# Option B: With Node.js (if installed)
+npx http-server
+
+# Option C: With VS Code
+# Right-click index.html → Open with Live Server
+                        </div>
+                        
+                        <div class="alert success">
+                            <strong>✅ Advantages:</strong>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>No server setup needed</li>
+                                <li>Works immediately</li>
+                                <li>Complete privacy control</li>
+                                <li>All data stays on your device</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="alert error" style="color: #721c24;">
+                            <strong>⚠️ Limitations:</strong>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Emails require manual user interaction</li>
+                                <li>Uses default email client</li>
+                                <li>Limited attachment support</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Option 2 -->
+                <div id="option2" class="tab-content">
+                    <div class="option">
+                        <h3>🚀 Full-Featured Setup - Automated Emails</h3>
+                        <p><strong>Best for:</strong> Production deployment, automated alerts, video evidence</p>
+                        
+                        <h4 style="margin-top: 15px; color: #333;">Prerequisites:</h4>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li>Node.js v14+ (<a href="https://nodejs.org" target="_blank">Download</a>)</li>
+                            <li>npm (included with Node.js)</li>
+                            <li>Gmail account with 2FA enabled</li>
+                            <li>Gmail App Password (<a href="https://support.google.com/accounts/answer/185833" target="_blank">Create</a>)</li>
+                        </ul>
+                        
+                        <h4 style="margin-top: 15px; color: #333;">Installation:</h4>
+                        <div class="code-block">
+# 1. Navigate to project
+cd fire-alert-app
+
+# 2. Install dependencies
+npm install
+
+# 3. Start server
+npm start
+
+# 4. Open browser
+# http://localhost:3000
+                        </div>
+                        
+                        <h4 style="margin-top: 15px; color: #333;">What Gets Installed:</h4>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>Express.js</strong> - Web server</li>
+                            <li><strong>Nodemailer</strong> - Email sending</li>
+                            <li><strong>CORS</strong> - Cross-origin support</li>
+                            <li><strong>Multer</strong> - File handling (future enhancement)</li>
+                        </ul>
+                        
+                        <h4 style="margin-top: 15px; color: #333;">Email Configuration:</h4>
+                        <p>Pre-configured with:</p>
+                        <div class="code-block">
+Email: emergencyalertbysatya@gmail.com
+App Password: fvuuzpbqbnmrfxgt
+                        </div>
+                        <p>✅ Already set up in <code style="background: #f0f0f0; padding: 2px 6px;">server.js</code> - just run!</p>
+                        
+                        <h4 style="margin-top: 15px; color: #333;">Or Use Your Own Email:</h4>
+                        <p>Edit <code style="background: #f0f0f0; padding: 2px 6px;">server.js</code>, find auth section and update:</p>
+                        <div class="code-block">
+auth: {
+  user: 'your-email@gmail.com',
+  pass: 'your-app-password-here'
+}
+                        </div>
+                        
+                        <div class="alert success">
+                            <strong>✅ Advantages:</strong>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Fully automated email sending</li>
+                                <li>Attaches photos and video clips</li>
+                                <li>Professional alert formatting</li>
+                                <li>Sends to multiple recipients automatically</li>
+                                <li>Ready for production deployment</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="alert error" style="color: #721c24;">
+                            <strong>⚠️ Requirements:</strong>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Node.js must be installed</li>
+                                <li>Server must be running</li>
+                                <li>Gmail configured with App Password</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- File Structure -->
+            <div class="section">
+                <h2>📁 Project Files</h2>
+                <div class="file-list">
+                    <ul>
+                        <li><strong>index.html</strong> - Main web app (the actual app file)</li>
+                        <li><strong>server.js</strong> - Node.js backend (optional, for Option 2)</li>
+                        <li><strong>sw.js</strong> - Service Worker (offline support)</li>
+                        <li><strong>manifest.json</strong> - PWA configuration & icon definitions</li>
+                        <li><strong>package.json</strong> - Node.js dependencies</li>
+                        <li><strong>README.md</strong> - Full documentation</li>
+                        <li><strong>SETUP.md</strong> - Detailed setup guide</li>
+                        <li><strong>config.html</strong> - This file</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Detection Thresholds -->
+            <div class="section">
+                <h2>🎯 Detection Settings</h2>
+                <div class="option">
+                    <h3>Fire Detection Threshold</h3>
+                    <p><strong>Current:</strong> > 8% of frame with red/orange patterns</p>
+                    <p>Triggers when camera detects bright red, orange, or yellow colors characteristic of fire.</p>
+                    
+                    <h3 style="margin-top: 20px;">Smoke Detection Threshold</h3>
+                    <p><strong>Current:</strong> > 15% of frame with gray patterns</p>
+                    <p>Triggers when camera detects dark gray tones characteristic of smoke.</p>
+                    
+                    <p style="margin-top: 15px; color: #666;"><em>Note: Thresholds can be adjusted in index.html - search for "fireRatio >" and "smokeRatio >"</em></p>
+                </div>
+            </div>
+            
+            <!-- Testing -->
+            <div class="section">
+                <h2>🧪 Testing Guide</h2>
+                <div class="option">
+                    <h3>Step 1: Test Camera Permission</h3>
+                    <p>✅ Browser should ask for camera access</p>
+                    <p>✅ Grant permission</p>
+                    
+                    <h3 style="margin-top: 20px;">Step 2: Test Fire Detection</h3>
+                    <p>Point camera at:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>Red/orange object (phone flashlight, red paper)</li>
+                        <li>Orange/yellow light</li>
+                        <li>Anything with fire-like colors</li>
+                    </ul>
+                    <p>✅ Alert should trigger within 5-10 seconds</p>
+                    
+                    <h3 style="margin-top: 20px;">Step 3: Test Smoke Detection</h3>
+                    <p>Point camera at:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>Dark gray areas</li>
+                        <li>Black fabric or surface</li>
+                        <li>Anything with smoke-like colors</li>
+                    </ul>
+                    <p>✅ Alert should trigger within 5-10 seconds</p>
+                    
+                    <h3 style="margin-top: 20px;">Step 4: Test Alerts</h3>
+                    <p>✅ Full screen red alert appears</p>
+                    <p>✅ Sound plays</p>
+                    <p>✅ Screen flashes (if device supports)</p>
+                    <p>✅ Browser notification appears</p>
+                    <p>✅ (Option 2 only) Email sent automatically</p>
+                </div>
+            </div>
+            
+            <!-- Troubleshooting -->
+            <div class="section">
+                <h2>🔧 Troubleshooting</h2>
+                
+                <div class="option">
+                    <h3>Problem: App won't start / Blank page</h3>
+                    <p><strong>Solution:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>Press F12 to open developer tools</li>
+                        <li>Check Console tab for errors</li>
+                        <li>Ensure HTML file is opened correctly</li>
+                        <li>Try a different browser</li>
+                    </ul>
+                </div>
+                
+                <div class="option">
+                    <h3>Problem: Camera won't work</h3>
+                    <p><strong>Solution:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>Check browser camera permissions</li>
+                        <li>Ensure camera isn't used by another app</li>
+                        <li>Try incognito mode</li>
+                        <li>Restart browser</li>
+                        <li>On mobile: Check Settings → Camera permissions</li>
+                    </ul>
+                </div>
+                
+                <div class="option">
+                    <h3>Problem: Detection too sensitive/not sensitive enough</h3>
+                    <p><strong>Solution:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>Open index.html with text editor</li>
+                        <li>Find "fireRatio > 0.08" or "smokeRatio > 0.15"</li>
+                        <li>Lower value = more sensitive (0.05)</li>
+                        <li>Higher value = less sensitive (0.12)</li>
+                        <li>Save and reload</li>
+                    </ul>
+                </div>
+                
+                <div class="option" style="margin-bottom: 0;">
+                    <h3>Problem: Emails not sending (Option 2)</h3>
+                    <p><strong>Solution:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>Verify Gmail app password is correct</li>
+                        <li>Check 2FA is enabled on Gmail</li>
+                        <li>View server logs (npm start output)</li>
+                        <li>Ensure Node.js is running</li>
+                        <li>Test with: curl -X POST http://localhost:3000/api/health</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h3 style="margin-bottom: 15px;">🚀 Ready to Get Started?</h3>
+            <div class="button-group" style="justify-content: center;">
+                <a href="index.html" class="btn btn-primary">Open Fire Alert App</a>
+                <a href="SETUP.md" class="btn btn-secondary">View Setup Guide</a>
+            </div>
+            <p style="margin-top: 20px; opacity: 0.7;">
+                Emergency Alert System | Created for Life-Saving Detection<br>
+                <small>⚠️ For demonstration purposes. Use certified fire alarms for safety.</small>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(evt, tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(c => c.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            
+            // Show selected content and activate button
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
