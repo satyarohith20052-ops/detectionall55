@@ -1,0 +1,26 @@
+name: Deploy Fire Alert to GitHub Pages
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'index.html'
+      - 'manifest.json'
+      - 'sw.js'
+      - '*.html'
+      - '*.css'
+      - '*.js'
+      - '*.json'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          cname: ''
